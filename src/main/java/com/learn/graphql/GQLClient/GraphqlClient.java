@@ -15,7 +15,7 @@ import java.util.*;
 @Service
 public class GraphqlClient {
 
-    private static final String GQL_URL = "https://foro-backend.herokuapp.com/graphql";
+    private static final String GQL_URL = "DUMMY_URL";
 
     public List<Thread> getThreads(Integer page, Integer size) {
         if (page == null || page == 0) {
