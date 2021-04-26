@@ -73,6 +73,23 @@ GraphQLRequestEntity requestEntity = GraphQLRequestEntity.Builder()
 
 Also we have a headers() method in which we can set a Map<String, String> value.
 
+#### Building an Input Object
+To build queries with object arguments, we can use the input object builder:
+
+```java
+InputObject<Object> inputObject = new InputObject.Builder<>()
+        .put("page", 1)
+        .put("size", 12)
+        .build();
+```
+
+Treat it like a Map object, setting your keys and its values through put() method and then build it. You can use it within arguments, creating a new argument and setting as value: 
+```java
+...
+  .arguments(new Arguments("getThreads", new Argument<>("input", inputObject)))
+...
+```
+
 #### Using raw string
 ```java
 GraphQLRequestEntity requestEntity = GraphQLRequestEntity.Builder()
@@ -95,6 +112,16 @@ result = responseEntity.getResponse().getThreads();
 
 ```java
 GraphQLResponseEntity<AuthData> responseEntity = graphQLTemplate.mutate(requestEntity, AuthData.class);
+```
+
+### Handling errors
+To verify if our request was successful or not, we can check the errors array. If its empty then the request was successful but if it has an element then there was an error. So we can use that object to get the message from GraphQL API and maybe throw a custom exception.
+
+```java
+if (responseEntity.getErrors() != null && responseEntity.getErrors().length > 0) {
+    Error error = responseEntity.getErrors()[0];
+    throw new GraphQLException(error.getMessage());
+}
 ```
 
 ### Further information
